@@ -69,7 +69,7 @@ pub fn get_emoji(a: &[u8]) -> Vec<u8> {
 }
 
 impl Request {
-    pub async fn parse(mut socket: TcpStream) -> Result<Self, PErr> {
+    pub async fn parse(socket: &mut tokio::net::TcpStream) -> Result<Self, PErr> {
         let mut r = Request {
             packet: Packet {
                 method: Methods::GB,

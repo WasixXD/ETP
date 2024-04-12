@@ -1,6 +1,6 @@
 use std::env;
 use std::io::Result;
-use std::io::Write;
+use std::io::{Write, Read};
 use std::net::TcpStream;
 
 #[derive(Debug, Clone)]
@@ -46,6 +46,8 @@ fn main() -> Result<()> {
 
     // first 4 bytes => method
     // next 20 bytes => emoji
+    // next 4 bytes => charset
+    // 
     let packet: Vec<u8> = [
         method.as_bytes(),
         emoji_bytes,
@@ -59,6 +61,9 @@ fn main() -> Result<()> {
     let mut stream = TcpStream::connect(addr)?;
 
     stream.write(&packet)?;
+
+
+    stream.read
 
     Ok(())
 }
