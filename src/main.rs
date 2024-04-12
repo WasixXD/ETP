@@ -1,6 +1,6 @@
-mod Request;
+mod request;
 
-use crate::Request::Request as req;
+use crate::request::Request as req;
 use std::io::Result;
 use tokio::net::{TcpListener, TcpStream};
 
@@ -25,5 +25,4 @@ async fn main() -> Result<()> {
         }
     }
 
-    Ok(())
 }

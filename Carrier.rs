@@ -1,7 +1,6 @@
 use std::env;
 use std::io::Result;
 use std::io::Write;
-use std::mem;
 use std::net::TcpStream;
 
 #[derive(Debug, Clone)]
@@ -27,29 +26,30 @@ fn main() -> Result<()> {
         (String::new(), String::new(), String::new(), String::new())
     };
 
-    // TODO: THIS HAS TO BE REFACTORED
-    // let packet = Packet {
-    //     method: method.as_bytes(),
-    //     emoji: emoji.as_bytes(),
-    //     charset: "utf8".as_bytes(),
-    //     version: "ETP/0.1".as_bytes(),
-    //     headers: "Sender: carrier/1.0".as_bytes()
-    // };
 
-    // let sender: [u8; mem::size_of::<Packet>()] = unsafe {
-    //       mem::transmute(packet.clone())
-    // };
-
-    // println!("{packet:?}");
-    // println!("{sender:?}");
-
+    // TODO: REFACTOR ALL
     if method == "gb" {
-        method.push_str("00");
+        method.push_str("--");
     }
+
+    // println!("{:?}", emoji.as_bytes().len());
+    let emoji_bytes = &mut [0;20];
+
+    //TODO: Refactor
+    for i in 0..20 {
+        if i < emoji.as_bytes().len() {
+            emoji_bytes[i] = emoji.as_bytes()[i];
+        } else {
+            emoji_bytes[i] = 0;
+        }
+    }
+
+    // first 4 bytes => method
+    // next 20 bytes => emoji
     let packet: Vec<u8> = [
         method.as_bytes(),
-        emoji.as_bytes(),
-        "utf8".as_bytes(),
+        emoji_bytes,
+        "utf8-".as_bytes(),
         "ETP/0.1".as_bytes(),
         "Sender: carrier/1.0".as_bytes(),
     ]
