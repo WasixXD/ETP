@@ -1,7 +1,7 @@
 use tokio::io::AsyncReadExt;
 use tokio::net::TcpStream;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Eq, PartialEq, Copy)]
 pub enum Methods {
     PULL,
     GB,
@@ -13,6 +13,7 @@ pub enum Charset {
     UTF8,
 }
 
+#[derive(Debug)]
 pub enum PErr {
     Error,
     WithoutMethod,
@@ -23,12 +24,12 @@ pub enum PErr {
 pub struct Packet {
     method: Methods,
     charset: Charset,
-    emoji: Vec<u8>,
+    pub emoji: Vec<u8>,
 }
 
 #[derive(Debug, Clone)]
 pub struct Request {
-    packet: Packet,
+    pub packet: Packet,
 }
 
 const ASCII_SIGN: &[u8] = b"ascii";
@@ -60,11 +61,7 @@ pub fn check_for_charset(a: &[u8]) -> Option<Charset> {
 }
 
 pub fn get_emoji(a: &[u8]) -> Vec<u8> {
-    let b: Vec<_> = a
-        .iter()
-        .copied()
-        .filter(|value| value != &(0_u8))
-        .collect();
+    let b: Vec<_> = a.iter().copied().filter(|value| value != &(0_u8)).collect();
     b
 }
 
@@ -77,6 +74,7 @@ impl Request {
                 emoji: vec![0],
             },
         };
+
         let mut data = [0; 64];
         let _ = socket.read(&mut data).await.unwrap();
 
@@ -116,5 +114,9 @@ impl Request {
         );
 
         Ok(r)
+    }
+
+    pub fn get_method(&self) -> Methods {
+        self.packet.method
     }
 }

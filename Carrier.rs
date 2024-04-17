@@ -1,6 +1,7 @@
 use std::env;
 use std::io::Result;
-use std::io::{Write, Read};
+use std::str;
+use std::io::{Read, Write};
 use std::net::TcpStream;
 
 #[derive(Debug, Clone)]
@@ -26,14 +27,13 @@ fn main() -> Result<()> {
         (String::new(), String::new(), String::new(), String::new())
     };
 
-
     // TODO: REFACTOR ALL
     if method == "gb" {
         method.push_str("--");
     }
 
     // println!("{:?}", emoji.as_bytes().len());
-    let emoji_bytes = &mut [0;20];
+    let emoji_bytes = &mut [0; 20];
 
     //TODO: Refactor
     for i in 0..20 {
@@ -47,7 +47,7 @@ fn main() -> Result<()> {
     // first 4 bytes => method
     // next 20 bytes => emoji
     // next 4 bytes => charset
-    // 
+    //
     let packet: Vec<u8> = [
         method.as_bytes(),
         emoji_bytes,
@@ -62,8 +62,12 @@ fn main() -> Result<()> {
 
     stream.write(&packet)?;
 
+    let mut body = [0; 64];
 
-    stream.read
+    stream.read(&mut body)?;
+
+    let parsed = str::from_utf8(&body);
+    println!("-=-=-=-=-=-=\n{parsed:?}");
 
     Ok(())
 }
