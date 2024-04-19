@@ -13,6 +13,7 @@ pub enum Charset {
     UTF8,
 }
 
+// TODO: More errors
 #[derive(Debug)]
 pub enum PErr {
     Error,
@@ -106,7 +107,7 @@ impl Request {
         let rest = String::from_utf8_lossy(&data[29..data.len() - 1]);
 
         println!(
-            "{:?} {:?} {:?}\n{:?}",
+            "------\nReceived: \n> {:?} {:?} {:?}\n>{:?}",
             r.packet.method,
             String::from_utf8_lossy(&r.packet.emoji),
             r.packet.charset,

@@ -32,7 +32,7 @@ fn main() -> Result<()> {
         method.push_str("--");
     }
 
-    // println!("{:?}", emoji.as_bytes().len());
+
     let emoji_bytes = &mut [0; 20];
 
     //TODO: Refactor
@@ -57,7 +57,7 @@ fn main() -> Result<()> {
     ]
     .concat();
 
-    println!("{packet:?}");
+    // println!("{packet:?}");
     let mut stream = TcpStream::connect(addr)?;
 
     stream.write(&packet)?;
@@ -66,7 +66,7 @@ fn main() -> Result<()> {
 
     stream.read(&mut body)?;
 
-    let parsed = str::from_utf8(&body);
+    let parsed = str::from_utf8(&body).unwrap();
     println!("-=-=-=-=-=-=\n{parsed:?}");
 
     Ok(())
